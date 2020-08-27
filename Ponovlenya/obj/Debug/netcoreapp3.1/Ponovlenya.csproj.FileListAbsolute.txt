@@ -1,0 +1,4 @@
+C:\Users\Max\source\repos\Ponovlenya\bin\Debug\netcoreapp3.1\Ponovlenya.exe
+C:\Users\Max\source\repos\Ponovlenya\obj\Debug\netcoreapp3.1\Ponovlenya.csprojAssemblyReference.cache
+C:\Users\Max\source\repos\Ponovlenya\obj\Debug\netcoreapp3.1\Ponovlenya.AssemblyInfoInputs.cache
+C:\Users\Max\source\repos\Ponovlenya\obj\Debug\netcoreapp3.1\Ponovlenya.AssemblyInfo.cs
