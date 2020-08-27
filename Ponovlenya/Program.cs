@@ -67,15 +67,15 @@ namespace Ponovlenya
             DataSet ds = new DataSet();
 
             adapter.SelectCommand = new SqlCommand("Select Human.Name, Human.Birth from Human " +
-                "join Mail on Human.ID = Mail.Send" +
-                "where length(mail.text) = (Select min(length(mail.text)) from mail)", connection);
+                "join Mail on Human.ID = Mail.Send where len(mail.text) = (Select min(len(mail.text)) from mail)", connection);
 
             adapter.Fill(ds, "1");
 
-            adapter.SelectCommand = new SqlCommand("Select Human.Name, Human.Birth, count(Mail.Send) as Send, count(Give.Give) as Give from Human " +
-                "join Mail on Human.ID = Mail.Send" +
-                "join Give on Human.ID = Give.Give" +
-                "group by Human.ID", connection);
+            adapter.SelectCommand = new SqlCommand("Select Human.Name, Human.Second, tab2.Give, tab.Send from Human " +
+                "join (Select Human.ID, count(Mail.Send) as Send from Human " +
+                "left join Mail on Human.ID = Mail.Send group by Human.ID) as tab on tab.ID = Human.ID " +
+                "join (Select Human.ID, count(Give.Give) as Give from Human " +
+                "left join Give on Human.ID = Give.Give group by Human.ID) as tab2 on tab2.ID = Human.ID", connection);
 
             adapter.Fill(ds, "2");
 
@@ -95,13 +95,13 @@ namespace Ponovlenya
             {
                 Console.WriteLine(dt.TableName);
                 foreach (DataColumn column in dt.Columns)
-                    Console.Write("\t\t\t{0}", column.ColumnName);
+                    Console.Write("{0}\t\t", column.ColumnName);
                 Console.WriteLine();
                 foreach (DataRow row in dt.Rows)
                 {
                     var cells = row.ItemArray;
                     foreach (object cell in cells)
-                        Console.Write("\t\t\t{0}", cell);
+                        Console.Write("{0}\t", cell);
                     Console.WriteLine();
                 }
             }
@@ -112,8 +112,8 @@ namespace Ponovlenya
             var Three = (from Hum in CloseSet.Tables["Human"].AsEnumerable()
                         join Give in CloseSet.Tables["Give"].AsEnumerable() on Hum.Field<int>("ID") equals Give.Field<int>("Give")
                         join Mail in CloseSet.Tables["Mail"].AsEnumerable() on Give.Field<int>("Mail") equals Mail.Field<int>("ID")
-                        where Mail.Field<string>("Theme") == theme
-                        select new { name = Hum.Field<string>("Name"), second = Hum.Field<string>("Second") }).Distinct();
+                         where Mail.Field<string>("Theme").TrimEnd(' ') == theme
+                         select new { name = Hum.Field<string>("Name"), second = Hum.Field<string>("Second") }).Distinct();
 
             Console.WriteLine("Получатели заданной темы");
             foreach (var item in Three)
